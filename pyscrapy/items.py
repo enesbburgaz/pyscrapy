@@ -9,7 +9,8 @@ import scrapy
 class PyscrapyItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    productTitle = scrapy.Field()
-    commentText = scrapy.Field()
-    commentName = scrapy.Field()
-    buyInfo = scrapy.Field()
+    productBrand = scrapy.Field()
+    productName = scrapy.Field()
+    comments = scrapy.Field()
+
+
