@@ -1,7 +1,5 @@
 import subprocess
 import os
-from datetime import datetime
-from subprocess import Popen
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
@@ -16,9 +14,6 @@ def getAll():
     startPage = int(request.form.get("startPage"))
     endPage = int(request.form.get("endPage"))
 
-    now = datetime.now()
-    date_time = now.strftime("%m-%d-%Y_%H-%M-%S")
-    # /scrape?filename=jsonfilename
     filename = request.args.get('filename', default=f'{category}-{startPage}-{endPage}', type=str)
     output_json = filename + '.json'
     spider_name = "pyscrapy2"
