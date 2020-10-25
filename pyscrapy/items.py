@@ -11,6 +11,7 @@ class PyscrapyItem(scrapy.Item):
     # name = scrapy.Field()
     productBrand = scrapy.Field()
     productName = scrapy.Field()
+    commentsCount = scrapy.Field()
     comments = scrapy.Field()
 
 
