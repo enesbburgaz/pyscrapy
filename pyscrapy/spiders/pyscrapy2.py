@@ -24,7 +24,6 @@ class Pyscrapy2Spider(scrapy.Spider):
             url = response.urljoin(href.extract())
             yield scrapy.Request(url, callback=self.parsePage)
 
-        #sayfa sayisi   
         count= range(self.startPage,self.endPage)
         for x in count:
             nextPage = '/{category}?pi={page}'.format(category=self.category, page=x)
@@ -35,10 +34,10 @@ class Pyscrapy2Spider(scrapy.Spider):
         yield scrapy.Request(response.url+'/yorumlar', callback=self.getComments)
 
     def getComments(self, response):
-        evaluationCount = response.xpath('//*[@id="rating-and-review-app"]/div/div[2]/div/div[1]/div/h3/text()').extract()
+        #evaluationCount = response.xpath('//*[@id="rating-and-review-app"]/div/div[2]/div/div[1]/div/h3/text()').extract()
         item = PyscrapyItem()
-        productBrand = response.xpath('//*[@id="rating-and-review-app"]/div/div[1]/div/div[1]/div[2]/h1/span[1]/text()[1]').extract()
-        productName = response.xpath('//*[@id="rating-and-review-app"]/div/div[1]/div/div[1]/div[2]/h1/span[2]/text()').extract()
+        productBrand = response.xpath('//*[@id="rating-and-review-app"]/div/div[1]/div/div[1]/div[2]/h1/span[1]/text()[1]').extract_first()
+        productName = response.xpath('//*[@id="rating-and-review-app"]/div/div[1]/div/div[1]/div[2]/h1/span[2]/text()').extract_first()
         item['productBrand'] = productBrand
         item['productName'] = productName
         
@@ -55,7 +54,7 @@ class Pyscrapy2Spider(scrapy.Spider):
                 item['commentsCount'] = commentCount
 
                 for commentRow in response.xpath('//*[@id="rating-and-review-app"]/div/div[2]/div/div[2]/div[3]/div[2]'):
-                    for i in range(0,3):
+                    for i in range(0,commentCount):
                         try:
                             if commentRow.xpath('//div[@class="rnr-com-w"]/div[2]/div[1]/span[2]').extract()[i] in commentRow.xpath('//div[@class="rnr-com-w"]/div[2]/div[1]').extract()[i]:
                                 buyInfo = commentRow.xpath('//div[@class="rnr-com-w"]/div[2]/div[1]/span[2]/span/text()').extract()[i]
@@ -63,6 +62,7 @@ class Pyscrapy2Spider(scrapy.Spider):
                                 buyInfo = None
                             commentList.append({
                                 'userName' : commentRow.xpath('//div[@class="rnr-com-w"]/div[2]/div[1]/span[1]/text()[1]').extract()[i],
+                                'commentDate' : commentRow.xpath('//div[@class="rnr-com-w"]/div[2]/div[1]/span[1]/text()[3]').extract()[i],
                                 'commentText' : commentRow.xpath('//div[@class="rnr-com-w"]/div[1]/div/text()').extract()[i],
                                 'buyInfo' : buyInfo
                                 })
